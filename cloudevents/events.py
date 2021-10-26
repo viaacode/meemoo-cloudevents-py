@@ -246,11 +246,11 @@ class AMQPBinding(ProtocolBinding):
         AMQPMessage.correlation_id = event.correlation_id
         AMQPMessage.id = event.id
         # We could also use the CEMessageMode-enum?
-        if mode == "binary":
+        if mode == CEMessageMode.BINARY:
             data = event.get_data()
             AMQPMessage.data = json.dumps(data).encode("utf-8")
             AMQPMessage.content_type = "application/json; charset=utf-8"
-        elif mode == "structured":
+        elif mode == CEMessageMode.STRUCTURED:
             # data: bytes
             AMQPMessage.data = event.to_json().encode("utf-8")
             AMQPMessage.content_type = "application/cloudevents+json; charset=UTF-8"
@@ -301,10 +301,10 @@ class PulsarBinding(ProtocolBinding):
         # Properties (attributes) as well.
         PulsarMessage.attributes = event._attributes.to_dict(serializable=True)
         # We could also use the CEMessageMode-enum?
-        if mode == "binary":
+        if mode == CEMessageMode.BINARY:
             data = event.get_data()
             PulsarMessage.data = json.dumps(data).encode("utf-8")
-        elif mode == "structured":
+        elif mode == CEMessageMode.STRUCTURED:
             # data: bytes
             PulsarMessage.data = event.to_json().encode("utf-8")
             # Pulsar properties: None or dict
