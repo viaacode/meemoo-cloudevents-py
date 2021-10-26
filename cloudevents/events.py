@@ -156,7 +156,7 @@ class Event:
     def get_data(self):
         assert self.outcome != ""
         # NOTE: this assumes 'structured' mode for now!
-        return self._data["data"]
+        return self._data
 
     def get_attributes(self):
         return self._attributes.to_dict()
