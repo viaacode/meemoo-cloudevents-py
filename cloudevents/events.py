@@ -146,10 +146,7 @@ class Event:
     def to_dict(self, serializable: bool = False):
         """Return this object as dict. When `serializable=True` return all
         values as strings rather than objects."""
-        if serializable:
-            attrs = self._attributes.to_dict(serializable=True)
-        else:
-            attrs = self._attributes.to_dict(serializable=False)
+        attrs = self._attributes.to_dict(serializable=serializable)
         return {**attrs, "data": self._data}
         
     def to_json(self) -> str:
