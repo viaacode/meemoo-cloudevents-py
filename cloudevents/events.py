@@ -250,7 +250,7 @@ class AMQPBinding(ProtocolBinding):
         elif mode == CEMessageMode.STRUCTURED:
             # data: bytes
             AMQPMessage.data = event.to_json().encode("utf-8")
-            AMQPMessage.content_type = "application/cloudevents+json; charset=UTF-8"
+            AMQPMessage.content_type = "application/cloudevents+json; charset=utf-8"
             # AMQP properties: None or dict
         else:
             # TODO!
@@ -299,12 +299,15 @@ class PulsarBinding(ProtocolBinding):
         PulsarMessage.attributes = event._attributes.to_dict(serializable=True)
         # We could also use the CEMessageMode-enum?
         if mode == CEMessageMode.BINARY:
+            PulsarMessage.content_type = PulsarMessage.attributes["content_type"] = "application/json; charset=utf-8"
             data = event.get_data()
             PulsarMessage.data = json.dumps(data).encode("utf-8")
         elif mode == CEMessageMode.STRUCTURED:
+            PulsarMessage.content_type = PulsarMessage.attributes["content_type"] = "application/cloudevents+json; charset=utf-8"
             # data: bytes
-            PulsarMessage.data = event.to_json().encode("utf-8")
-            # Pulsar properties: None or dict
+            event_dict = event.to_dict(serializable=True)
+            event_dict["content_type"] = "application/cloudevents+json; charset=utf-8"
+            PulsarMessage.data = json.dumps(event_dict).encode("utf-8")
         else:
             # TODO!
             print("Unknown mode")
@@ -312,11 +315,19 @@ class PulsarBinding(ProtocolBinding):
 
     @staticmethod
     def from_protocol(msg: PulsarMessage) -> Event:
-        data = json.loads(msg.data().decode("utf-8"))
+        content_type, charset = msg.properties()["content_type"].split(";")
+        mode = CEMessageMode.BINARY if content_type == "application/json" \
+               else CEMessageMode.STRUCTURED
+        # For now, we assume properties/headers to always be present as headers
+        # regardless of messaging mode.
         attributes = EventAttributes(type=msg.properties()["type"],
                                      source=msg.properties()["source"],
                                      subject=msg.properties()["subject"],
                                      outcome=EventOutcome(msg.properties()["outcome"]),
                                      correlation_id=msg.properties()["correlation_id"]
                                      )
+        if mode == CEMessageMode.BINARY:
+            data = json.loads(msg.data().decode("utf-8"))
+        elif mode == CEMessageMode.STRUCTURED:
+            data = json.loads(msg.data().decode("utf-8"))["data"]
         return Event(attributes, data)
