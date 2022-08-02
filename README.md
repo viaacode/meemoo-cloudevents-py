@@ -64,7 +64,7 @@ msg = PulsarBinding.to_protocol(event, CEMessageMode.STRUCTURED)
 
 # Open a Pulsar-connection and send the message to a topic
 client = pulsar.Client("pulsar://sample.pulsar.url:6650")
-producer = client.create_producer("be.meemoo.sample-event", producer_name="/meemoo/sample-app")
+producer = client.create_producer("be.meemoo.sample-event", producer_name="sample-app")
 
 msg_id = producer.send(msg.data, properties=msg.attributes,
                        event_timestamp=event.get_event_time_as_int())
@@ -81,7 +81,7 @@ from cloudevents import Event, EventOutcome, EventAttributes, PulsarBinding, CEM
 
 # Open a Pulsar-connection and start consuming messages from a topic
 client = pulsar.Client("pulsar://sample.pulsar.url:6650")
-consumer = client.subscribe("be.meemoo.sample-event", subscription_name="/meemoo/sample-app")
+consumer = client.subscribe("be.meemoo.sample-event", subscription_name="sample-app")
 incoming_msg = consumer.receive()
 
 # We can now create a CloudEvent from the incoming message.
