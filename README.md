@@ -17,6 +17,15 @@ Two protocol bindings are implemented:
 - Pulsar
 - AMQP
 
+## Diagrams
+
+<details>
+  <summary>Class diagram (click to expand)</summary>
+
+  ![meemoo-cloudevents-py](http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/viaacode/meemoo-cloudevents-py/main/docs/event_protocol_message.puml&fmt=svg)
+
+</details>
+
 ## Installation
 
 Package `meemoo-cloudevents` can be installed with pip:
