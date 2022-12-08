@@ -1,0 +1,76 @@
+@startuml
+
+package Bindings {
+    
+    abstract class ProtocolBinding {
+        +to_protocol(Event, CEMessageMode): Message
+        +from_protocol(Message): Event
+        +generate_attributes()
+    }
+    
+
+    enum CEMessageMode {
+        BINARY
+        STRUCTURED
+    }
+    
+    class PulsarBinding
+    class RabbitBinding
+
+    abstract class Message {
+        data
+        attributes
+    }
+    
+    class PulsarMessage
+    class RabbitMessage
+
+}
+
+package Events {
+
+    class EventAttributes {
+        ..CE-attributes..
+        id
+        source
+        specversion
+        type
+        ..
+        datacontenttype
+        subject
+        time
+        --
+        ..meemoo-attributes..
+        outcome: EventOutcome
+        correlation_id
+        --
+        +to_dict()
+        +to_json()
+    }
+    
+    class Event {
+        attributes: EventAttributes
+        data: Object
+    }
+
+    enum EventOutcome {
+        FAIL
+        WARNING
+        SUCCESS
+        +to_str()
+        +to_dict()
+        +to_json()
+    }
+
+}
+
+EventOutcome -* EventAttributes
+EventAttributes -* Event
+Message <|-- PulsarMessage
+Message <|-- RabbitMessage
+ProtocolBinding <|-- PulsarBinding
+ProtocolBinding <|-- RabbitBinding
+ProtocolBinding <.> Message
+Event <.> ProtocolBinding
+
+@enduml
