@@ -31,8 +31,13 @@ Two protocol bindings are implemented:
 Package `meemoo-cloudevents` can be installed with pip:
 
 ```
-$ pip install meemoo-cloudevents
+$ pip install meemoo-cloudevents \
+    --extra-index-url http://do-prd-mvn-01.do.viaa.be:8081/repository/pypi-all/simple \
+    --trusted-host do-prd-mvn-01.do.viaa.be
 ```
+
+**Note**: for now, the pip-package is not publicly hosted but only available through
+meemoo's internal repository.
 
 ## Usage
 
