@@ -1,12 +1,12 @@
 # events.py
 
 
-import datetime
 import uuid
 import json
+from datetime import datetime, timezone
 from enum import Enum
 from abc import ABC
-from typing import Dict
+from typing import Dict, Optional
 
 
 class EventOutcome(str, Enum):
@@ -58,7 +58,8 @@ class EventAttributes:
     def __init__(self, id: str = str(uuid.uuid4().int), source: str = "", type: str = "",
                  datacontenttype: str = "application/json", subject: str = "",
                  outcome: EventOutcome = EventOutcome.SUCCESS,
-                 correlation_id: str = ""):
+                 correlation_id: str = "",
+                 time: Optional[str] = None):
         self.id = id
         self.source = source
         self.type = type
@@ -66,7 +67,7 @@ class EventAttributes:
         self.subject = subject
         self.outcome = outcome
         ## Event time: tz-aware datetime object (UTC)
-        self.time = datetime.datetime.utcnow()
+        self.time: Optional[datetime] = self._parse_time(time)
         self.correlation_id = correlation_id or self._new_correlation_id()
 
     def __repr__(self):
@@ -74,12 +75,24 @@ class EventAttributes:
                f"type={self.type}, corr_id={self.correlation_id}>"
 
     def get_event_time_as_iso8601(self) -> str:
-        return self.time.replace(tzinfo=datetime.timezone.utc).isoformat()
+        return self.time.replace(tzinfo=timezone.utc).isoformat()
 
     # See: https://docs.python.org/3/library/time.html#time.time_ns (3.7+)
     def get_event_time_as_int(self) -> int:
         epoch = datetime.datetime.utcfromtimestamp(0)
         return round((self.time - epoch).total_seconds() * 1000.0)
+
+    def _parse_time(self, time: Optional[str]) -> Optional[datetime]:
+        """ Utility method for parsing a serialized timestamp string
+        """
+        if not time:
+            return datetime.now(timezone.utc)
+        else:
+            try:
+                timestamp = datetime.fromisoformat(time)
+            except ValueError:
+                return None
+            return timestamp
 
     def _new_correlation_id(self):
         return str(uuid.uuid4()).replace("-", "")
@@ -269,7 +282,8 @@ class AMQPBinding(ProtocolBinding):
                                      source=headers["source"],
                                      subject=headers["subject"],
                                      outcome=EventOutcome(headers["outcome"]),
-                                     correlation_id=headers["correlation_id"]
+                                     correlation_id=headers["correlation_id"],
+                                     time=headers.get("time"),
                                      )
         if mode == CEMessageMode.BINARY:
             data = json.loads(body.decode("utf-8"))
@@ -324,7 +338,8 @@ class PulsarBinding(ProtocolBinding):
                                      source=msg.properties()["source"],
                                      subject=msg.properties()["subject"],
                                      outcome=EventOutcome(msg.properties()["outcome"]),
-                                     correlation_id=msg.properties()["correlation_id"]
+                                     correlation_id=msg.properties()["correlation_id"],
+                                     time=msg.properties().get("time"),
                                      )
         if mode == CEMessageMode.BINARY:
             data = json.loads(msg.data().decode("utf-8"))
