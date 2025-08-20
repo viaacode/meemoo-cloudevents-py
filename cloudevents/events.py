@@ -36,7 +36,7 @@ class CEMessageMode(str, Enum):
     """Enum: CEMessageMode
 
     In CloudEvents, two message modes exist:
-    - BINARY        : event-attributes are seperated from the payload
+    - BINARY        : event-attributes are separated from the payload
     - STRUCTURED    : event-attributes are included in the payload, the payload
                       itself is moved to the `data`-field.
     """
