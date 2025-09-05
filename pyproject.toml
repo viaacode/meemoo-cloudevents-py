@@ -1,0 +1,31 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "meemoo-cloudevents"
+version = "0.1.0-rc.3"
+description = "Meemoo's implementation of CloudEvents in Python"
+readme = "README.md"
+keywords = ["cloudevents", "event-driven"]
+requires-python = ">=3.10"
+dependencies = []
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Developers",
+  "Programming Language :: Python :: 3.10",
+]
+
+[project.optional-dependencies]
+dev = [
+    "ruff",
+    "pytest",
+    "pytest-cov",
+    "build",
+    "twine",
+]
+
+[tool.pytest.ini_options]
+minversion = "6.0"
+addopts = "--rootdir=./src/cloudevents/ -v --cov=src/cloudevents/"
+testpaths = ["tests"]

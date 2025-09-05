@@ -2,7 +2,7 @@
 #
 #  Python.gitignore
 #
-#  .gitignore template file for Python projects within VIAA.
+#  .gitignore template file for Python projects within meemoo.
 #  
 #######################################################################
 
@@ -143,3 +143,6 @@ Session.vim
 *~
 # Auto-generated tag files
 tags
+
+# Commit msg preparations
+.commit.msg

@@ -26,6 +26,11 @@ Two protocol bindings are implemented:
 
 </details>
 
+## Prerequisites
+
+* Python 3.10+
+* Access to the meemoo PyPI
+
 ## Installation
 
 Package `meemoo-cloudevents` can be installed with pip:
@@ -35,9 +40,6 @@ $ pip install meemoo-cloudevents \
     --extra-index-url http://do-prd-mvn-01.do.viaa.be:8081/repository/pypi-all/simple \
     --trusted-host do-prd-mvn-01.do.viaa.be
 ```
-
-**Note**: for now, the pip-package is not publicly hosted but only available through
-meemoo's internal repository.
 
 ## Usage
 
@@ -108,4 +110,33 @@ print(event.get_data())
 
 # Close the client
 client.close()
+```
+
+## Development and testing
+
+1. Clone this repository and change into the new dir:
+
+```bash
+git clone git@github.com:viaacode/meemoo-cloudevents-py.git
+cd meemoo-cloudevents-py`
+```
+
+2. Init and activate a virtual env:
+
+```bash
+python -m venv .venv
+source .venv/bin/activate
+```
+
+3. Install the library (editable) and the dev/test dependencies:
+
+```bash
+(.venv) python -m pip install .
+(.venv) python -m pip install '.[dev]'
+```
+
+4. Run the tests
+
+```bash
+(.venv) python -m pytest
 ```
