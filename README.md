@@ -7,11 +7,6 @@ Meemoo's implementation of [CloudEvents](https://github.com/cloudevents/spec).
 Very much a work in progress. Currently only hosted on meemoo's internal
 artefact repository. Contact the dev-team for more information.
 
-Support for:
-
-- CloudEvents v1.0 only,
-- Python 3.8+ only.
-
 Two protocol bindings are implemented:
 
 - Pulsar

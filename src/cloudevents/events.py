@@ -5,7 +5,7 @@ import uuid
 import json
 from datetime import datetime, timezone
 from enum import Enum
-from abc import ABC
+from abc import ABC, abstractmethod
 from typing import Dict, Optional
 
 
@@ -243,25 +243,17 @@ class ProtocolBinding(ABC):
     Pulsar, AMPQ, ...
     """
 
-    @staticmethod
+    @abstractmethod
     def to_protocol(event: Event, mode: CEMessageMode = CEMessageMode.BINARY):
-        NotImplementedError(
-            "Class %s doesn't implement aMethod()" % (self.__class__.__name__)
-        )
+        pass
 
-    @staticmethod
+    @abstractmethod
     def from_protocol(msg) -> Event:
-        NotImplementedError(
-            "Class %s doesn't implement aMethod()" % (self.__class__.__name__)
-        )
+        pass
 
-    @staticmethod
+    @abstractmethod
     def generate_attributes(event: Event) -> dict:
-        # Generate binding-specific attribute-names, eg.: CE-EventTime,
-        # CE-CloudEventsVersion, ...
-        NotImplementedError(
-            "Class %s doesn't implement aMethod()" % (self.__class__.__name__)
-        )
+        pass
 
 
 class AMQPBinding(ProtocolBinding):
