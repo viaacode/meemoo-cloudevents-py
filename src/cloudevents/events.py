@@ -89,7 +89,7 @@ class EventAttributes:
 
     # See: https://docs.python.org/3/library/time.html#time.time_ns (3.7+)
     def get_event_time_as_int(self) -> int:
-        epoch = datetime.datetime.utcfromtimestamp(0)
+        epoch = datetime.fromtimestamp(0, self.time.tzinfo)
         return round((self.time - epoch).total_seconds() * 1000.0)
 
     def _parse_time(self, time: Optional[str]) -> Optional[datetime]:
