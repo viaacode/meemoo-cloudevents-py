@@ -1,6 +1,6 @@
 from datetime import datetime, timezone, timedelta
 
-from src.cloudevents.events import EventAttributes
+from cloudevents.events import EventAttributes
 
 
 class TestEventAttributes:

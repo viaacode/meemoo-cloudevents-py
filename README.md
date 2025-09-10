@@ -126,7 +126,7 @@ source .venv/bin/activate
 3. Install the library (editable) and the dev/test dependencies:
 
 ```bash
-(.venv) python -m pip install .
+(.venv) python -m pip install -e .
 (.venv) python -m pip install '.[dev]'
 ```
 
